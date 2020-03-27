@@ -1,10 +1,11 @@
 #include <assert.h>
 #include <stdio.h>
 #include <strings.h>
-
+#include <iostream>
 #include "sudoku.h"
 
 #include <algorithm>
+using namespace std;
 
 int neighbors[N][NEIGHBOR];
 
@@ -58,7 +59,7 @@ static void print_neighbors(const bool adjacent[ROW][COL], int row, int col, int
   puts("\n");
 }
 
-/*public*/ void init_neighbors()
+/*public*/ void init_neighbors(int neighbors[N][NEIGHBOR])
 {
   for (int row = 0; row < ROW; ++row) {
     for (int col = 0; col < COL; ++col) {
@@ -75,16 +76,18 @@ static void print_neighbors(const bool adjacent[ROW][COL], int row, int col, int
   }
 }
 
-bool solved()
+bool solved(int (*chess)[COL])
 {
   for (int row = 0; row < ROW; ++row) {
     // check row
     int occurs[10] = { 0 };
     for (int col = 0; col < COL; ++col) {
       int val = chess[row][col];
+      cout << val;
       assert(1 <= val && val <= NUM);
       ++occurs[val];
     }
+    cout<< endl;
 
     if (std::count(occurs, occurs+10, 1) != NUM)
       return false;

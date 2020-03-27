@@ -1,16 +1,7 @@
-#include <assert.h>
-#include <stdio.h>
+#include "sudoku_basic.h"
 
-#include <algorithm>
-
-#include "sudoku.h"
-
-int board[N];
-int spaces[N];
-int nspaces;
-int (*chess)[COL] = (int (*)[COL])board;
-
-static void find_spaces()
+void 
+Basic::find_spaces()
 {
   nspaces = 0;
   for (int cell = 0; cell < N; ++cell) {
@@ -19,7 +10,8 @@ static void find_spaces()
   }
 }
 
-void input(const char in[N])
+void 
+Basic::input(const char in[N])
 {
   for (int cell = 0; cell < N; ++cell) {
     board[cell] = in[cell] - '0';
@@ -28,7 +20,8 @@ void input(const char in[N])
   find_spaces();
 }
 
-bool available(int guess, int cell)
+bool
+Basic::available(int guess, int cell)
 {
   for (int i = 0; i < NEIGHBOR; ++i) {
     int neighbor = neighbors[cell][i];
@@ -39,7 +32,8 @@ bool available(int guess, int cell)
   return true;
 }
 
-bool solve_sudoku_basic(int which_space)
+bool 
+Basic::solve_sudoku_basic(int which_space)
 {
   if (which_space >= nspaces) {
     return true;
@@ -65,4 +59,20 @@ bool solve_sudoku_basic(int which_space)
     }
   }
   return false;
+}
+
+Basic::Basic(char *in)
+{
+  //fflush(stdout);
+  init_neighbors(neighbors);
+  input(in);
+} 
+
+void 
+Basic::basic_solve(int* solution)
+{
+  solve_sudoku_basic(0);
+  if(!solved(chess))
+    assert(0);
+  memcpy(solution,board,N*sizeof(int));
 }

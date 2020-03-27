@@ -1,14 +1,38 @@
-#include <assert.h>
-#include <strings.h>
+#include "sudoku_min_arity_cache.h"
+void
+Minac::input(const char in[])
+{
+  for (int cell = 0; cell < N; ++cell) {
+    board[cell] = in[cell] - '0';
+    assert(0 <= board[cell] && board[cell] <= NUM);
+  }
+  find_spaces();
+}
 
-#include <algorithm>
+void
+Minac::find_spaces()
+{
+  nspaces = 0;
+  for (int cell = 0; cell < N; ++cell) {
+    if (board[cell] == 0)
+      spaces[nspaces++] = cell;
+  }
+}
 
-#include "sudoku.h"
+bool
+Minac::available(int guess, int cell)
+{
+  for (int i = 0; i < NEIGHBOR; ++i) {
+    int neighbor = neighbors[cell][i];
+    if (board[neighbor] == guess) {
+      return false;
+    }
+  }
+  return true;
+}
 
-static bool occupied[N][NUM+1];
-static int arity[N];
-
-static void find_min_arity(int space)
+void 
+Minac::find_min_arity(int space)
 {
   int cell = spaces[space];
   int min_space = space;
@@ -27,7 +51,8 @@ static void find_min_arity(int space)
   }
 }
 
-void init_cache()
+void 
+Minac::init_cache()
 {
   bzero(occupied, sizeof(occupied));
   std::fill(arity, arity + N, NUM);
@@ -47,7 +72,8 @@ void init_cache()
   }
 }
 
-bool solve_sudoku_min_arity_cache(int which_space)
+bool 
+Minac::solve_sudoku_min_arity_cache(int which_space)
 {
   if (which_space >= nspaces) {
     return true;
@@ -95,4 +121,20 @@ bool solve_sudoku_min_arity_cache(int which_space)
     }
   }
   return false;
+}
+
+Minac::Minac (char* in)
+{
+  init_neighbors(neighbors);
+  input (in);
+  init_cache();
+}
+
+void
+Minac::minac_solve (int *solution)
+{
+  solve_sudoku_min_arity_cache (0);
+  if (!solved(chess))
+    assert(0);
+  memcpy (solution, board, N * sizeof(int));
 }

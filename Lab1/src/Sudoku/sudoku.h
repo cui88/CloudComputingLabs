@@ -11,7 +11,7 @@ extern int spaces[N];
 extern int nspaces;
 extern int (*chess)[COL];
 
-void init_neighbors();
+void init_neighbors(int neighbors[N][NEIGHBOR]);
 void input(const char in[N]);
 void init_cache();
 
@@ -21,5 +21,5 @@ bool solve_sudoku_basic(int which_space);
 bool solve_sudoku_min_arity(int which_space);
 bool solve_sudoku_min_arity_cache(int which_space);
 bool solve_sudoku_dancing_links(int unused);
-bool solved();
+bool solved(int (*chess)[COL]);
 #endif
